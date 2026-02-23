@@ -31,10 +31,7 @@ export const metadata: Metadata = {
     images: ["/og-social-share.png"],
   },
   icons: {
-    icon: [
-      { url: "/icon.png", type: "image/png", sizes: "32x32" },
-      { url: "/icon.svg", type: "image/svg+xml", sizes: "any" },
-    ],
+    icon: [{ url: "/icon.png", type: "image/png", sizes: "32x32" }],
   },
 }
 

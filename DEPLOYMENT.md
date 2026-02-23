@@ -20,7 +20,7 @@ See `.env.example` for the full list. Variables (all optional except EmailJS for
 
 - **NEXT_PUBLIC_GTM_ID:** Google Tag Manager container ID (e.g. `GTM-MJBCTMVT`). If set, GTM is loaded (beforeInteractive). You can use this instead of or alongside GA4.
 - **NEXT_PUBLIC_GA_MEASUREMENT_ID:** Google Analytics 4 Measurement ID (e.g. `G-XXXXXXXXXX`). If set, gtag.js is loaded for GA4.
-- **NEXT_PUBLIC_EMAILJS_***:** Required for contact forms. Public key, service ID, and template ID from [emailjs.com](https://www.emailjs.com/). Template variables used: `{{source}}`, `{{phone}}`, `{{name}}`, `{{amount}}`, `{{assetType}}`, `{{serviceType}}`.
+- **NEXT_PUBLIC_EMAILJS_***:** Required for contact forms. Public key, service ID, and template ID from [emailjs.com](https://www.emailjs.com/). Template variables: `{{source}}`, `{{phone}}`, `{{name}}`, `{{amount}}`, `{{assetType}}` / `{{collateralType}}` (Typ zajištění: Nemovitost / Automobil), `{{serviceType}}`. For CTA/popup (phone-only “callback”) the app sends: name/assetType `---`, serviceType `Není relevantní (Callback)`, amount `--- Pouze požadavek na zavolání ---`; use these in one template to get the “NOVÁ POPTÁVKA K POSOUZENÍ” callback email format.
 
 The `.env.example` in this repo is pre-filled with the same values as your other static build (`hnedpenize`), so you can copy it to `.env.local` and run `npm run build` to get a working static site (forms + GTM) without changing anything.
 
