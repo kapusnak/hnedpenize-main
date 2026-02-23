@@ -15,11 +15,11 @@ export function LeadPopup() {
   const [phoneDigits, setPhoneDigits] = useState("")
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
 
-  // Show popup after 5 seconds
+  // Show popup after 15 seconds
   useEffect(() => {
     const showTimer = setTimeout(() => {
       setIsVisible(true)
-    }, 5000)
+    }, 15000)
 
     return () => clearTimeout(showTimer)
   }, [])
