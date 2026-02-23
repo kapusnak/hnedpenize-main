@@ -75,4 +75,4 @@ That makes `/jak-to-funguje` serve `jak-to-funguje.html`. Adjust if your host us
 - **Forms:** Handled by **EmailJS** in the browser; no backend on your side.
 - **Analytics:** **Google Analytics** only, loaded via script; no server needed.
 
-You do **not** need Vercel, Railway, or any Node.js runtime on Wedos.
+No Node.js runtime or third-party PaaS is required on Wedos.

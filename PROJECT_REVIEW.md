@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a **Next.js 16** (App Router) marketing/lead-generation site for **Dočasný výkup s.r.o.** — a Czech company offering reverse leasing and asset-backed financing (“peníze jištěné nemovitostí nebo vozem”). The project was generated with [v0.app](https://v0.app) and is set up for Vercel; it can be converted to a **fully static** site for FTP hosting (e.g. Wedos) with no Node.js server.
+This is a **Next.js 16** (App Router) marketing/lead-generation site for **Dočasný výkup s.r.o.** — a Czech company offering reverse leasing and asset-backed financing (“peníze jištěné nemovitostí nebo vozem”). It is built as a **fully static** site for FTP hosting (e.g. Wedos) with no Node.js server.
 
 ---
 
@@ -14,7 +14,7 @@ This is a **Next.js 16** (App Router) marketing/lead-generation site for **Doča
 - **Styling:** Tailwind CSS v4, `tw-animate-css`, CSS variables for theme (primary blue, gold CTA)
 - **UI:** Radix-based components (shadcn-style) in `components/ui/`
 - **Forms:** React state + `onSubmit` handlers (no server actions; currently `console.log` only — to be wired to EmailJS)
-- **Analytics:** Currently `@vercel/analytics` in root layout — to be replaced with Google Analytics only for static deployment
+- **Analytics:** Google Tag Manager + Google Analytics (optional), loaded via scripts; no server required
 
 ### Site structure
 
@@ -31,7 +31,7 @@ This is a **Next.js 16** (App Router) marketing/lead-generation site for **Doča
 
 ### Main components
 
-- **`app/layout.tsx`** — Root layout: HTML lang `cs`, Inter font, metadata (title, description, icons), global CSS, Vercel Analytics (to be removed for static).
+- **`app/layout.tsx`** — Root layout: HTML lang `cs`, Inter font, metadata (title, description, icons), global CSS, GTM + Google Analytics.
 - **`app/page.tsx`** — Home: `Header`, `LeadPopup`, hero section, `LoanCalculator`, benefit grid.
 - **`components/header.tsx`** — Fixed top bar, logo + “Dočasný výkup”, desktop links, mobile menu (state-based).
 - **`components/loan-calculator.tsx`** — Client form: asset type (real estate / car), service type, amount slider, name + phone; submit only logs to console.
@@ -46,7 +46,7 @@ All of the above are either static content or client-side state/events; there is
 
 - **Forms:** User fills fields → `onSubmit` → `handleSubmit` → `e.preventDefault()` + `console.log(...)`.
 - **Navigation:** Client-side via Next.js `<Link>` (works in static export).
-- **Analytics:** Vercel Analytics script in layout (requires their backend; will be removed for static + GA-only).
+- **Analytics:** GTM and GA scripts in layout (client-side only).
 
 ---
 
@@ -76,8 +76,7 @@ That folder can be uploaded to **Wedos** (or any static host) via **FTP** and se
    - Ensure no features that require a server (already the case).
 
 2. **No server-dependent analytics**
-   - Remove `@vercel/analytics` from the layout.
-   - Add **Google Analytics** only (e.g. gtag.js via `next/script`), driven by an env var like `NEXT_PUBLIC_GA_MEASUREMENT_ID` so the site works with no server and only GA on the client.
+   - Use **Google Tag Manager** and/or **Google Analytics** (e.g. gtag.js via `next/script`), driven by env vars so the site works with no server.
 
 3. **Emails via EmailJS**
    - Forms must not call your own server. Use **EmailJS** from the browser:
@@ -97,7 +96,7 @@ That folder can be uploaded to **Wedos** (or any static host) via **FTP** and se
 
 - **Project status:** Complete for a static marketing site; forms and analytics need to be switched to client-only (EmailJS + Google Analytics) and static export enabled.
 - **Static build:** Yes — add `output: 'export'`, then `npm run build`; deploy the `out/` (or configured export dir) via FTP to Wedos.
-- **Fully functional without server:** Yes — once Vercel Analytics is removed, GA is added, and all three forms send via EmailJS from the browser. No server-side calls required.
+- **Fully functional without server:** Yes — analytics via GTM/GA, all three forms send via EmailJS from the browser. No server-side calls required.
 
 See **DEPLOYMENT.md** for exact FTP/Wedos steps and build commands.
 
@@ -106,6 +105,6 @@ See **DEPLOYMENT.md** for exact FTP/Wedos steps and build commands.
 ## Changes made for static + FTP deployment
 
 - **`next.config.mjs`:** Added `output: 'export'` so `npm run build` produces the `out/` folder (static HTML/JS/CSS).
-- **Analytics:** Replaced `@vercel/analytics` with a **Google Analytics** component driven by `NEXT_PUBLIC_GA_MEASUREMENT_ID` (optional).
+- **Analytics:** GTM and **Google Analytics** components driven by `NEXT_PUBLIC_GTM_ID` and `NEXT_PUBLIC_GA_MEASUREMENT_ID` (optional).
 - **Forms:** All three forms (loan calculator, lead popup, CTA section) now send via **EmailJS** using `NEXT_PUBLIC_EMAILJS_*` env vars; success/error feedback is shown in the UI.
 - **Docs:** Added **DEPLOYMENT.md** (build, env vars, FTP upload, optional `.htaccess`) and **.env.example** for required/optional variables.

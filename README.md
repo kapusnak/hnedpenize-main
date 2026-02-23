@@ -1,30 +1,18 @@
-# Půjčka formulář
+# Půjčka formulář — hnedpenize
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
-
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/koubakapu-4574s-projects/v0-new-chat)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/kFHy6LMyzBI)
+Static marketing site for **Dočasný výkup s.r.o.** (reverse leasing, asset-backed financing). Built with Next.js and deployed as a **static export** via FTP to Wedos.
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+- **Stack:** Next.js 16 (App Router), React 19, Tailwind CSS
+- **Deployment:** Static build (`output: 'export'`) → upload `out/` via FTP to Wedos. No Node.js on the server.
+- **Analytics:** Google Tag Manager + Google Analytics (optional, via env vars)
+- **Forms:** EmailJS (browser-side; no backend required)
 
-## Deployment
+## Build and deploy
 
-Your project is live at:
+1. Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_*` variables (EmailJS, GTM, GA, site URL).
+2. Run `npm install` and `npm run build`.
+3. Upload the **contents** of the `out/` folder to your Wedos hosting via FTP.
 
-**[https://vercel.com/koubakapu-4574s-projects/v0-new-chat](https://vercel.com/koubakapu-4574s-projects/v0-new-chat)**
-
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.app/chat/kFHy6LMyzBI](https://v0.app/chat/kFHy6LMyzBI)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+See **DEPLOYMENT.md** for detailed steps (env vars, FTP upload, optional `.htaccess`).

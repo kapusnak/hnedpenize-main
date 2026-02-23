@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   ...(siteUrl && { metadataBase: new URL(siteUrl) }),
   title: siteTitle,
   description: siteDescription,
-  generator: "v0.app",
   openGraph: {
     title: siteTitle,
     description: siteDescription,
@@ -32,20 +31,7 @@ export const metadata: Metadata = {
     images: ["/og-social-share.png"],
   },
   icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-        sizes: "32x32",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-        sizes: "32x32",
-      },
-    ],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+    icon: [{ url: "/icon.svg", type: "image/svg+xml", sizes: "any" }],
   },
 }
 
