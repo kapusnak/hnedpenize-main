@@ -144,7 +144,7 @@ export default function KontaktyPage() {
       </section>
 
       {/* CTA Section - Same as Jak to funguje page */}
-      <section className="pt-4 lg:pt-6 pb-12 lg:pb-16 bg-card">
+      <section className="pt-4 lg:pt-6 pb-12 lg:pb-16 bg-background">
         <div className="container mx-auto px-4 max-w-3xl">
           <CtaSection />
         </div>
