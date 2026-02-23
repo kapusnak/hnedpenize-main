@@ -22,7 +22,7 @@ export default function KontaktyPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-12 lg:py-16">
+      <section className="pt-12 lg:pt-16 pb-4 lg:pb-6">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
             {/* Left Column - Direct Contact */}
@@ -144,7 +144,7 @@ export default function KontaktyPage() {
       </section>
 
       {/* CTA Section - Same as Jak to funguje page */}
-      <section className="py-12 lg:py-16 bg-muted/30">
+      <section className="pt-4 lg:pt-6 pb-12 lg:pb-16 bg-card">
         <div className="container mx-auto px-4 max-w-3xl">
           <CtaSection />
         </div>

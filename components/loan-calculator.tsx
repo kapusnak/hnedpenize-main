@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { sendLead } from "@/lib/emailjs"
 import { formatPhoneDisplay, parsePhoneDigits, toFullPhone } from "@/lib/phone-420"
 import { Card, CardContent } from "@/components/ui/card"
@@ -12,6 +12,98 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Building2, Car, TrendingUp, Lock } from "lucide-react"
+
+const LOCK_THRESHOLD_PX = 10
+
+/**
+ * Wraps the amount slider so that on touch devices:
+ * - Vertical drag scrolls the page (no conflict).
+ * - Horizontal drag moves the slider (axis lock after threshold).
+ * Mouse interaction is unchanged (overlay is disabled on non-touch).
+ */
+function SliderTouchLock({
+  minIndex,
+  maxIndex,
+  valueIndex,
+  onValueChange,
+  children,
+}: {
+  minIndex: number
+  maxIndex: number
+  valueIndex: number
+  onValueChange: (index: number) => void
+  children: React.ReactNode
+}) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const startRef = useRef<{ x: number; y: number } | null>(null)
+  const lockedRef = useRef<"horizontal" | "vertical" | null>(null)
+
+  const clampIndex = useCallback(
+    (i: number) => Math.max(minIndex, Math.min(maxIndex, Math.round(i))),
+    [minIndex, maxIndex],
+  )
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      const t = e.touches[0]
+      if (!t) return
+      startRef.current = { x: t.clientX, y: t.clientY }
+      lockedRef.current = null
+    },
+    [],
+  )
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      const t = e.touches[0]
+      const track = trackRef.current
+      if (!t || !track) return
+
+      const dx = t.clientX - (startRef.current?.x ?? t.clientX)
+      const dy = t.clientY - (startRef.current?.y ?? t.clientY)
+
+      if (lockedRef.current === null) {
+        const adx = Math.abs(dx)
+        const ady = Math.abs(dy)
+        if (adx + ady < LOCK_THRESHOLD_PX) return
+        lockedRef.current = adx >= ady ? "horizontal" : "vertical"
+      }
+
+      if (lockedRef.current === "vertical") return
+
+      e.preventDefault()
+      const rect = track.getBoundingClientRect()
+      const ratio = (t.clientX - rect.left) / rect.width
+      const index = clampIndex(ratio * (maxIndex - minIndex) + minIndex)
+      onValueChange(index)
+    },
+    [minIndex, maxIndex, clampIndex, onValueChange],
+  )
+
+  const handleTouchEnd = useCallback(() => {
+    startRef.current = null
+    lockedRef.current = null
+  }, [])
+
+  return (
+    <div
+      ref={trackRef}
+      className="relative w-full"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+      style={{ touchAction: "pan-y" }}
+    >
+      {children}
+      {/* Overlay only captures touch on touch devices (hover: none); mouse goes to slider */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none [@media(hover:none)]:pointer-events-auto"
+        aria-hidden
+      />
+    </div>
+  )
+}
 
 const REAL_ESTATE_RANGE = { min: 100000, max: 25000000, step: 100000 }
 const CAR_RANGE = { min: 50000, max: 5000000, step: 5000 }
@@ -238,14 +330,21 @@ export function LoanCalculator() {
             </div>
             {assetType === "real-estate" ? (
               <>
-                <Slider
-                  value={[realEstateAmountToIndex(amount[0])]}
-                  onValueChange={([i]) => setAmount([REAL_ESTATE_AMOUNT_VALUES[i]])}
-                  min={0}
-                  max={REAL_ESTATE_AMOUNT_VALUES.length - 1}
-                  step={1}
-                  className="w-full touch-pan-x"
-                />
+                <SliderTouchLock
+                  minIndex={0}
+                  maxIndex={REAL_ESTATE_AMOUNT_VALUES.length - 1}
+                  valueIndex={realEstateAmountToIndex(amount[0])}
+                  onValueChange={(i) => setAmount([REAL_ESTATE_AMOUNT_VALUES[i]])}
+                >
+                  <Slider
+                    value={[realEstateAmountToIndex(amount[0])]}
+                    onValueChange={([i]) => setAmount([REAL_ESTATE_AMOUNT_VALUES[i]])}
+                    min={0}
+                    max={REAL_ESTATE_AMOUNT_VALUES.length - 1}
+                    step={1}
+                    className="w-full"
+                  />
+                </SliderTouchLock>
                 <div className="flex justify-between text-xs text-muted-foreground">
                   <span>{formatRangeLabel(REAL_ESTATE_RANGE.min)}</span>
                   <span>{formatRangeLabel(REAL_ESTATE_RANGE.max)}</span>
@@ -253,14 +352,21 @@ export function LoanCalculator() {
               </>
             ) : (
               <>
-                <Slider
-                  value={[carAmountToIndex(amount[0])]}
-                  onValueChange={([i]) => setAmount([CAR_AMOUNT_VALUES[i]])}
-                  min={0}
-                  max={CAR_AMOUNT_VALUES.length - 1}
-                  step={1}
-                  className="w-full touch-pan-x"
-                />
+                <SliderTouchLock
+                  minIndex={0}
+                  maxIndex={CAR_AMOUNT_VALUES.length - 1}
+                  valueIndex={carAmountToIndex(amount[0])}
+                  onValueChange={(i) => setAmount([CAR_AMOUNT_VALUES[i]])}
+                >
+                  <Slider
+                    value={[carAmountToIndex(amount[0])]}
+                    onValueChange={([i]) => setAmount([CAR_AMOUNT_VALUES[i]])}
+                    min={0}
+                    max={CAR_AMOUNT_VALUES.length - 1}
+                    step={1}
+                    className="w-full"
+                  />
+                </SliderTouchLock>
                 <div className="flex justify-between text-xs text-muted-foreground">
                   <span>{formatRangeLabel(CAR_RANGE.min)}</span>
                   <span>{formatRangeLabel(CAR_RANGE.max)}</span>

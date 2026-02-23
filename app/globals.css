@@ -155,3 +155,17 @@
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
+
+/* Slide in from bottom for mobile popup */
+@keyframes slide-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in-bottom {
+  animation: slide-in-bottom 0.35s ease-out forwards;
+}

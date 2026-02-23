@@ -33,7 +33,7 @@ export default function HowItWorksPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-12 md:py-16 lg:py-20 bg-muted/50">
+        <section className="pt-12 md:pt-16 lg:pt-20 pb-4 md:pb-6 lg:pb-8 bg-background">
           <div className="container mx-auto px-4">
             <FaqSection />
           </div>
@@ -41,7 +41,7 @@ export default function HowItWorksPage() {
       </ProcessSelectionProvider>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-16 lg:py-20 bg-background">
+      <section className="pt-4 md:pt-6 lg:pt-8 pb-12 md:pb-16 lg:pb-20 bg-background">
         <div className="container mx-auto px-4 max-w-3xl">
           <CtaSection />
         </div>

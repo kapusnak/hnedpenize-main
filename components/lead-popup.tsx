@@ -69,10 +69,10 @@ export function LeadPopup() {
       <div
         className={`
           fixed z-50
-          /* Mobile: bottom sheet, max 33% height with safe area padding */
-          bottom-0 left-0 right-0 max-h-[33vh]
-          /* Desktop: floating card bottom-right */
-          lg:bottom-6 lg:right-6 lg:left-auto lg:max-h-none lg:w-[380px]
+          /* Mobile: bottom sheet, slide in from bottom */
+          bottom-0 left-0 right-0 max-h-[33vh] animate-slide-in-bottom
+          /* Desktop: floating card bottom-right, no slide animation */
+          lg:bottom-6 lg:right-6 lg:left-auto lg:max-h-none lg:w-[380px] lg:animate-none
           bg-primary rounded-t-2xl lg:rounded-2xl shadow-2xl
           transition-all duration-300 ease-out
           ${shouldShake ? "animate-shake" : ""}
