@@ -3,6 +3,8 @@ import emailjs from "@emailjs/browser"
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
 const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
 const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+/** Client confirmation template ("Klientská - potvrzení přijetí poptávky") – used when sending success email to the client */
+const CLIENT_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID ?? "template_3t8h00d"
 
 export type LeadParams = {
   source: "calculator" | "popup" | "cta"
@@ -40,6 +42,7 @@ export async function sendLead(params: LeadParams): Promise<void> {
     assetType: assetTypeValue,
     /** Alias for EmailJS templates that show "Typ zajištění" (Nemovitost / Automobil) */
     collateralType: assetTypeValue,
+    propertyType: assetTypeValue,
     serviceType: isCallbackOnly ? CALLBACK_ONLY_SERVICE : (params.serviceType ?? ""),
     amount:
       params.amount != null
@@ -49,4 +52,29 @@ export async function sendLead(params: LeadParams): Promise<void> {
           : "",
   }
   await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, { publicKey: PUBLIC_KEY })
+
+  // Send client success/confirmation email when we have the client's email (e.g. from calculator form)
+  const clientEmail = (params.email ?? "").trim()
+  if (clientEmail && PUBLIC_KEY && SERVICE_ID && CLIENT_TEMPLATE_ID) {
+    const clientParams = {
+      to_email: clientEmail,
+      client_email: clientEmail,
+      name: isCallbackOnly ? "" : (params.name ?? ""),
+      phone: params.phone,
+      amount:
+        params.amount != null
+          ? formatAmountCzk(params.amount)
+          : isCallbackOnly
+            ? CALLBACK_ONLY_AMOUNT
+            : "",
+      assetType: assetTypeValue,
+      collateralType: assetTypeValue,
+      /** Used in client template as "Typ zajištění" (Nemovitost / Automobil) */
+      propertyType: assetTypeValue,
+      serviceType: isCallbackOnly ? CALLBACK_ONLY_SERVICE : (params.serviceType ?? ""),
+    }
+    emailjs
+      .send(SERVICE_ID, CLIENT_TEMPLATE_ID, clientParams, { publicKey: PUBLIC_KEY })
+      .catch((err) => console.warn("Client confirmation email failed:", err))
+  }
 }
