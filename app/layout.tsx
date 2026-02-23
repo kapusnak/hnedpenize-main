@@ -1,0 +1,66 @@
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import { GoogleAnalytics } from "@/components/google-analytics"
+import { GoogleTagManager } from "@/components/google-tag-manager"
+import "./globals.css"
+
+const _inter = Inter({ subsets: ["latin"] })
+
+const siteTitle = "Spolehlivé financování: Zajištěné úvěry"
+const siteDescription =
+  "Získejte finanční prostředky prostřednictvím zpětného leasingu. Rychle, jednoduše a bez zbytečné byrokracie."
+
+// Set NEXT_PUBLIC_SITE_URL (e.g. https://yourdomain.com) for absolute OG image URLs when sharing
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+
+export const metadata: Metadata = {
+  ...(siteUrl && { metadataBase: new URL(siteUrl) }),
+  title: siteTitle,
+  description: siteDescription,
+  generator: "v0.app",
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/og-social-share.png"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/og-social-share.png"],
+  },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      {
+        url: "/icon-light-32x32.png",
+        media: "(prefers-color-scheme: light)",
+        sizes: "32x32",
+      },
+      {
+        url: "/icon-dark-32x32.png",
+        media: "(prefers-color-scheme: dark)",
+        sizes: "32x32",
+      },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+  },
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="cs">
+      <body className="font-sans antialiased">
+        <GoogleTagManager />
+        {children}
+        <GoogleAnalytics />
+      </body>
+    </html>
+  )
+}
