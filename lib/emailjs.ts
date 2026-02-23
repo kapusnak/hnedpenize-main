@@ -53,7 +53,8 @@ export async function sendLead(params: LeadParams): Promise<void> {
   }
   await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, { publicKey: PUBLIC_KEY })
 
-  // Send client success/confirmation email when we have the client's email (e.g. from calculator form)
+  // Send client success/confirmation email when we have the client's email (e.g. from calculator form).
+  // In EmailJS, template template_3t8h00d must have "To Email" set to {{to_email}} or recipient will be empty (422).
   const clientEmail = (params.email ?? "").trim()
   if (clientEmail && PUBLIC_KEY && SERVICE_ID && CLIENT_TEMPLATE_ID) {
     const clientParams = {
